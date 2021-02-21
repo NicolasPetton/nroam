@@ -1,0 +1,28 @@
+* nroam
+
+nroam is a supplementary package for [[https://github.com/org-roam/org-roam][org-roam]] that replaces the backlink side buffer of Org-roam.  Instead, it displays org-roam backlinks at the end of org-roam buffers.
+
+* Rationale
+
+One of the ideas behing nroam is to remove the friction and effort it takes to consult backlinks. I consider backlinks to be a very central piece of information about a note. Backlinks can even be the most important content of a note, for instance when using page links as tags.
+
+It is easy to miss backlinks when they are not always visible with the main content of a note. The side buffer will not always be open, and even if it is, the information it contains is visually far away from the note you're looking at.
+
+By making them an integral part of the org buffer, backlinks also become more powerful. You could for instance make a sparse tree—see =org-sparse-tree= — to filter the contents of a note and its backlinks at the same time.
+
+* Setup
+
+To setup nroam for all =org-mode= buffer, evaluate the following:
+
+#+begin_src elisp
+(add-hook 'org-mode-hook #'nroam-mode)
+#+end_src
+
+* Warning
+
+This package is in its infancy. Be careful when using it as it modifies your =org-mode= buffers—it should not modify your files though. Backup your data often.
+
+* Performance
+
+At the moment no caching is done when crawling source files for backlinks so there could be performance issues with very large number of org files as a lot of buffers could have to be open to crawl backlink content.
+
