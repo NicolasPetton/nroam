@@ -34,7 +34,7 @@
 ;;
 ;; TODO:
 ;; - [x] Jump to reference on RET.
-;; - [ ] Ensure one empty line before backlink section, but do put the start marker on the heading line.
+;; - [x] Ensure one empty line before backlink section, but do put the start marker on the heading line.
 ;; - [x] Shift the level of headings in references
 ;; - [x] Hide drawers in the backlink sections.
 ;; - [x] Fix relative links (esp important with diaries that are in a subdirectory).
@@ -59,6 +59,7 @@ Make the region inserted by BODY read-only, and marked with
   `(let ((beg (point)))
      (set-marker nroam-start-marker (point))
      ,@body
+     (put-text-property beg (1+ beg) 'front-sticky '(read-only))
      (put-text-property beg (point) 'read-only t)
      (set-marker nroam-end-marker (point))))
 
@@ -108,6 +109,7 @@ Make the region inserted by BODY read-only, and marked with
   (interactive)
   (nroam--setup-markers)
   (nroam--prune-backlinks)
+  (nroam--ensure-empty-line)
   (nroam--insert-backlinks))
 
 (defun nroam--update-backlinks-maybe ()
@@ -144,7 +146,6 @@ Make the region inserted by BODY read-only, and marked with
        (save-excursion
          (goto-char (point-max))
          (with-nroam-markers
-           (insert "\n")
            (nroam--insert-backlinks-heading (seq-length backlinks))
            (seq-do #'nroam--insert-backlink-group groups)))
        (nroam--hide-drawers))))
@@ -252,6 +253,13 @@ Temporary fix until `org-roam' v2 is out."
   (format "%s%s"
           thing
           (if (> n 1) "s" "")))
+
+(defun nroam--ensure-empty-line ()
+  "Insert a newline character if the buffer does not end with a newline."
+  (let ((inhibit-read-only t))
+    (save-excursion
+      (goto-char (point-max))
+      (unless (eq ?\n (char-before (1- (point)))) (insert "\n")))))
 
 (provide 'nroam)
 ;;; nroam.el ends here
