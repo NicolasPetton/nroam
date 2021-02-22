@@ -12,13 +12,16 @@ It is easy to miss backlinks when they are not always visible with the main cont
 
 By making them an integral part of the org buffer, backlinks also become more powerful. You could for instance make a sparse tree—see =org-sparse-tree= — to filter the contents of a note and its backlinks at the same time.
 
-* Setup
+* Setup & usage
 
 To setup nroam for all =org-mode= buffer, evaluate the following:
 
 #+begin_src elisp
 (add-hook 'org-mode-hook #'nroam-mode)
 #+end_src
+
+The linked references section will be updated after each buffer save.
+It can also be manually updated by typing =C-c C-c= anywhere in the linked references section.
 
 * Warning
 
