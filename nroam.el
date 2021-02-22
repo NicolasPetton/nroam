@@ -102,7 +102,6 @@ Make the region inserted by BODY read-only, and marked with
   (interactive)
   (nroam--setup-markers)
   (nroam--prune-backlinks)
-  (nroam--ensure-empty-line)
   (nroam--insert-backlinks))
 
 (defun nroam--update-backlinks-maybe ()
@@ -139,6 +138,7 @@ Make the region inserted by BODY read-only, and marked with
        (save-excursion
          (goto-char (point-max))
          (with-nroam-markers
+           (nroam--ensure-empty-line)
            (nroam--insert-backlinks-heading (seq-length backlinks))
            (seq-do #'nroam--insert-backlink-group groups)))
        (nroam--hide-drawers))))
@@ -250,9 +250,8 @@ Temporary fix until `org-roam' v2 is out."
 (defun nroam--ensure-empty-line ()
   "Insert a newline character if the buffer does not end with a newline."
   (let ((inhibit-read-only t))
-    (save-excursion
-      (goto-char (point-max))
-      (unless (eq ?\n (char-before (1- (point)))) (insert "\n")))))
+    (goto-char (point-max))
+    (unless (eq ?\n (char-before (1- (point)))) (insert "\n"))))
 
 (provide 'nroam)
 ;;; nroam.el ends here
