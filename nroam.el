@@ -48,7 +48,7 @@
   "Evaluate BODY.
 Make the region inserted by BODY read-only, and marked with
 `nroam-start-marker' and `nroam-end-marker'."
-  (declare (indent 0))
+  (declare (indent 0) (debug t))
   `(let ((beg (point)))
      (set-marker nroam-start-marker (point))
      ,@body
