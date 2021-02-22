@@ -31,13 +31,6 @@
 ;;
 ;; To setup nroam for all org-mode buffer, evaluate the following:
 ;; (add-hook 'org-mode-hook #'nroam-mode)
-;;
-;; TODO:
-;; - [x] Jump to reference on RET.
-;; - [x] Ensure one empty line before backlink section, but do put the start marker on the heading line.
-;; - [x] Shift the level of headings in references
-;; - [x] Hide drawers in the backlink sections.
-;; - [x] Fix relative links (esp important with diaries that are in a subdirectory).
 
 ;;; Code:
 
