@@ -45,6 +45,7 @@
 (defvar-local nroam-end-marker nil)
 
 (defvar nroam-work-buffer " nroam-work")
+
 (defmacro with-nroam-markers (&rest body)
   "Evaluate BODY.
 Make the region inserted by BODY read-only, and marked with
@@ -78,6 +79,7 @@ Make the region inserted by BODY read-only, and marked with
     (nroam--prune-backlinks)))
 
 (defun nroam--init-work-buffer ()
+  "Initiate nroam hidden buffer."
   (get-buffer-create nroam-work-buffer t)
   (with-current-buffer nroam-work-buffer
     (delay-mode-hooks
