@@ -139,9 +139,10 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--point-at-section-p ()
   "Return non-hil if point if on the backlinks section."
-  (when-let* ((beg (marker-position nroam-start-marker))
-              (end (marker-position nroam-end-marker)))
-    (<= beg (point) end)))
+  (when (nroam--sections-inserted-p)
+    (when-let* ((beg (marker-position nroam-start-marker))
+                (end (marker-position nroam-end-marker)))
+      (<= beg (point) end))))
 
 (defun nroam--update-maybe ()
   "Update backlinks when in nroam-mode."
