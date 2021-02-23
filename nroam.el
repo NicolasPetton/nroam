@@ -29,8 +29,8 @@
 ;; buffer of Org-roam.  Instead, it displays org-roam backlinks at the end of
 ;; org-roam buffers.
 ;;
-;; To setup nroam for all org-mode buffer, evaluate the following:
-;; (add-hook 'org-mode-hook #'nroam-mode)
+;; To setup nroam for all org-roam buffers, evaluate the following:
+;; (add-hook 'org-mode-hook #'nroam-setup-maybe)
 
 ;;; Code:
 
@@ -69,6 +69,12 @@ Make the region inserted by BODY read-only, and marked with
     (define-key map (kbd "C-c C-c") #'nroam-ctrl-c-ctrl-c)
     (define-key map (kbd "RET") #'nroam-return)
     map))
+
+;;;###autoload
+(defun nroam-setup-maybe ()
+  "Setup nroam for the current buffer iff an org-roam buffer."
+  (when (nroam--org-roam-file-p)
+    (nroam-mode)))
 
 ;;;###autoload
 (define-minor-mode nroam-mode
@@ -119,6 +125,10 @@ Make the region inserted by BODY read-only, and marked with
     (nroam--insert-backlinks-heading (seq-length backlinks))
     (seq-do #'nroam--insert-backlink-group groups)
     (nroam--hide-drawers)))
+
+(defun nroam--org-roam-file-p ()
+  "Return non-nil if the current buffer is an org-roam buffer."
+  (org-roam--org-roam-file-p))
 
 (defun nroam--init-work-buffer ()
   "Initiate nroam hidden buffer."

@@ -17,7 +17,7 @@ By making them an integral part of the org buffer, backlinks also become more po
 To setup nroam for all =org-mode= buffer, evaluate the following:
 
 #+begin_src elisp
-(add-hook 'org-mode-hook #'nroam-mode)
+(add-hook 'org-mode-hook #'nroam-setup-maybe)
 #+end_src
 
 The linked references section will be updated after each buffer save.
