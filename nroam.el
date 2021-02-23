@@ -44,7 +44,7 @@
 (defvar-local nroam-start-marker nil)
 (defvar-local nroam-end-marker nil)
 
-(defvar nroam-work-buffer " nroam-work")
+(defvar nroam-work-buffer " *nroam-work*")
 
 (defmacro with-nroam-markers (&rest body)
   "Evaluate BODY.
