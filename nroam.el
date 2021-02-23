@@ -80,7 +80,7 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--init-work-buffer ()
   "Initiate nroam hidden buffer."
-  (get-buffer-create nroam-work-buffer t)
+  (get-buffer-create nroam-work-buffer)
   (with-current-buffer nroam-work-buffer
     (delay-mode-hooks
       (org-mode))))
