@@ -44,6 +44,8 @@
 (defvar-local nroam-start-marker nil)
 (defvar-local nroam-end-marker nil)
 
+(defvar nroam-work-buffer " nroam-work")
+
 (defmacro with-nroam-markers (&rest body)
   "Evaluate BODY.
 Make the region inserted by BODY read-only, and marked with
@@ -68,12 +70,20 @@ Make the region inserted by BODY read-only, and marked with
   :keymap nroam-mode-map
   (if nroam-mode
       (progn
+        (nroam--init-work-buffer)
         (add-hook 'before-save-hook #'nroam--prune-backlinks nil t)
         (add-hook 'after-save-hook #'nroam--update-backlinks-maybe nil t)
         (nroam-update-backlinks))
     (remove-hook 'before-save-hook #'nroam--prune-backlinks t)
     (remove-hook 'after-save-hook #'nroam--update-backlinks-maybe t)
     (nroam--prune-backlinks)))
+
+(defun nroam--init-work-buffer ()
+  "Initiate nroam hidden buffer."
+  (get-buffer-create nroam-work-buffer t)
+  (with-current-buffer nroam-work-buffer
+    (delay-mode-hooks
+      (org-mode))))
 
 (defun nroam-ctrl-c-ctrl-c ()
   "Update the backlinks for the current buffer, or fallback to `org-ctrl-c-ctrl-c'."
@@ -198,14 +208,14 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--crawl-source (file point)
   "Return the source element in FILE at POINT."
-  (with-current-buffer (find-file-noselect file)
-    (save-excursion
-      (goto-char point)
-      (let ((elt (org-element-at-point)))
-        (let ((begin (org-element-property :begin elt))
-              (end (org-element-property :end elt))
-              (type (org-element-type elt)))
-          `(,type . ,(buffer-substring begin end)))))))
+  (with-current-buffer nroam-work-buffer
+    (insert-file-contents file nil nil nil 'replace)
+    (goto-char point)
+    (let ((elt (org-element-at-point)))
+      (let ((begin (org-element-property :begin elt))
+            (end (org-element-property :end elt))
+            (type (org-element-type elt)))
+        `(,type . ,(buffer-substring begin end))))))
 
 (defun nroam--fix-links (content origin)
   "Correct all relative links in CONTENT from ORIGIN.

@@ -26,8 +26,3 @@ It can also be manually updated by typing =C-c C-c= anywhere in the linked refer
 * Warning
 
 This package is in its infancy. Be careful when using it as it modifies your =org-mode= buffers—it should not modify your files though. Backup your data often.
-
-* Performance
-
-At the moment no caching is done when crawling source files for backlinks so there could be performance issues with very large number of org files as a lot of buffers could have to be open to crawl backlink content.
-
