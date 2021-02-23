@@ -70,6 +70,7 @@ Make the region inserted by BODY read-only, and marked with
     (define-key map (kbd "RET") #'nroam-return)
     map))
 
+;;;###autoload
 (define-minor-mode nroam-mode
   "Show nroam sections at the end of org-roam buffers."
   :lighter "nroam"
@@ -84,6 +85,7 @@ Make the region inserted by BODY read-only, and marked with
     (remove-hook 'after-save-hook #'nroam--update-maybe t)
     (nroam--prune)))
 
+;;;###autoload
 (defun nroam-ctrl-c-ctrl-c ()
   "Update the sections for the current buffer, or fallback to `org-ctrl-c-ctrl-c'."
   (interactive)
@@ -93,12 +95,21 @@ Make the region inserted by BODY read-only, and marked with
                             #'org-capture-finalize
                           #'org-ctrl-c-ctrl-c))))
 
+;;;###autoload
 (defun nroam-return ()
   "Open nroam link at point, or fallback to `org-return'."
   (interactive)
   (if (nroam--point-at-section-p)
       (nroam--follow-link)
     (call-interactively #'org-return)))
+
+;;;###autoload
+(defun nroam-update ()
+  "Update org-roam sections for the current buffer."
+  (interactive)
+  (nroam--setup-markers)
+  (nroam--prune)
+  (nroam--insert))
 
 (defun nroam-backlinks-section ()
   "Insert org-roam backlinks for the current buffer."
@@ -121,13 +132,6 @@ Make the region inserted by BODY read-only, and marked with
   (when-let* ((beg (marker-position nroam-start-marker))
               (end (marker-position nroam-end-marker)))
     (<= beg (point) end)))
-
-(defun nroam-update ()
-  "Update org-roam sections for the current buffer."
-  (interactive)
-  (nroam--setup-markers)
-  (nroam--prune)
-  (nroam--insert))
 
 (defun nroam--update-maybe ()
   "Update backlinks when in nroam-mode."
