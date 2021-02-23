@@ -41,6 +41,12 @@
 (require 'subr-x)
 (require 'bookmark)
 
+(defcustom nroam-sections
+ '(nroam-backlinks-section)
+ "List of functions to be called to insert sections in nroam buffers."
+ :group 'nroam
+ :type '(repeat function))
+
 (defvar-local nroam-start-marker nil)
 (defvar-local nroam-end-marker nil)
 
@@ -65,18 +71,43 @@ Make the region inserted by BODY read-only, and marked with
     map))
 
 (define-minor-mode nroam-mode
-  "Show backlinks at the end of org-roam buffers."
+  "Show nroam sections at the end of org-roam buffers."
   :lighter "nroam"
   :keymap nroam-mode-map
   (if nroam-mode
       (progn
         (nroam--init-work-buffer)
-        (add-hook 'before-save-hook #'nroam--prune-backlinks nil t)
-        (add-hook 'after-save-hook #'nroam--update-backlinks-maybe nil t)
-        (nroam-update-backlinks))
-    (remove-hook 'before-save-hook #'nroam--prune-backlinks t)
-    (remove-hook 'after-save-hook #'nroam--update-backlinks-maybe t)
-    (nroam--prune-backlinks)))
+        (add-hook 'before-save-hook #'nroam--prune nil t)
+        (add-hook 'after-save-hook #'nroam--update-maybe nil t)
+        (nroam-update))
+    (remove-hook 'before-save-hook #'nroam--prune t)
+    (remove-hook 'after-save-hook #'nroam--update-maybe t)
+    (nroam--prune)))
+
+(defun nroam-ctrl-c-ctrl-c ()
+  "Update the sections for the current buffer, or fallback to `org-ctrl-c-ctrl-c'."
+  (interactive)
+  (if (nroam--point-at-section-p)
+      (nroam-update)
+    (call-interactively (if org-capture-mode
+                            #'org-capture-finalize
+                          #'org-ctrl-c-ctrl-c))))
+
+(defun nroam-return ()
+  "Open nroam link at point, or fallback to `org-return'."
+  (interactive)
+  (if (nroam--point-at-section-p)
+      (nroam--follow-link)
+    (call-interactively #'org-return)))
+
+(defun nroam-backlinks-section ()
+  "Insert org-roam backlinks for the current buffer."
+  (let* ((backlinks (nroam--get-backlinks))
+         (groups (seq-reverse (nroam--group-backlinks backlinks))))
+    (nroam--ensure-empty-line)
+    (nroam--insert-backlinks-heading (seq-length backlinks))
+    (seq-do #'nroam--insert-backlink-group groups)
+    (nroam--hide-drawers)))
 
 (defun nroam--init-work-buffer ()
   "Initiate nroam hidden buffer."
@@ -85,73 +116,53 @@ Make the region inserted by BODY read-only, and marked with
     (delay-mode-hooks
       (org-mode))))
 
-(defun nroam-ctrl-c-ctrl-c ()
-  "Update the backlinks for the current buffer, or fallback to `org-ctrl-c-ctrl-c'."
-  (interactive)
-  (if (nroam--point-at-backlinks-p)
-      (nroam-update-backlinks)
-    (call-interactively (if org-capture-mode
-                            #'org-capture-finalize
-                          #'org-ctrl-c-ctrl-c))))
-
-(defun nroam-return ()
-  "Open backlink at point, or fallback to `org-return'."
-  (interactive)
-  (if (nroam--point-at-backlinks-p)
-      (nroam--follow-link)
-    (call-interactively #'org-return)))
-
-(defun nroam--point-at-backlinks-p ()
+(defun nroam--point-at-section-p ()
   "Return non-hil if point if on the backlinks section."
   (when-let* ((beg (marker-position nroam-start-marker))
               (end (marker-position nroam-end-marker)))
     (<= beg (point) end)))
 
-(defun nroam-update-backlinks ()
-  "Update org-roam backlinks for the current buffer."
+(defun nroam-update ()
+  "Update org-roam sections for the current buffer."
   (interactive)
   (nroam--setup-markers)
-  (nroam--prune-backlinks)
-  (nroam--insert-backlinks))
+  (nroam--prune)
+  (nroam--insert))
 
-(defun nroam--update-backlinks-maybe ()
+(defun nroam--update-maybe ()
   "Update backlinks when in nroam-mode."
   (when nroam-mode
-    (nroam-update-backlinks)))
+    (nroam-update)))
 
 (defun nroam--setup-markers ()
   "Setup the current buffer with markers for nroam."
-  (unless (nroam--backlinks-inserted-p)
+  (unless (nroam--sections-inserted-p)
     (progn
       (setq nroam-start-marker (make-marker))
       (setq nroam-end-marker (make-marker)))))
 
-(defun nroam--backlinks-inserted-p ()
-  "Return non-nil if the current buffer has backlinks inserted."
+(defun nroam--sections-inserted-p ()
+  "Return non-nil if the current buffer has nroam sections inserted."
   (and (markerp nroam-start-marker)
        (marker-position nroam-start-marker)))
 
-(defun nroam--prune-backlinks ()
-  "Remove the backlinks section from the current buffer."
+(defun nroam--prune ()
+  "Remove nroam sections from the current buffer."
   (let ((inhibit-read-only t))
     (save-excursion
       (goto-char (point-min))
       (with-buffer-modified-unmodified
-       (when (nroam--backlinks-inserted-p)
+       (when (nroam--sections-inserted-p)
          (delete-region nroam-start-marker nroam-end-marker))))))
 
-(defun nroam--insert-backlinks ()
-  "Insert org-roam backlinks for the current buffer."
-  (if-let* ((backlinks (nroam--get-backlinks))
-            (groups (seq-reverse (nroam--group-backlinks backlinks))))
-      (with-buffer-modified-unmodified
-       (save-excursion
-         (goto-char (point-max))
-         (with-nroam-markers
-           (nroam--ensure-empty-line)
-           (nroam--insert-backlinks-heading (seq-length backlinks))
-           (seq-do #'nroam--insert-backlink-group groups)))
-       (nroam--hide-drawers))))
+(defun nroam--insert ()
+  "Insert nroam sections in the current buffer."
+  (with-buffer-modified-unmodified
+   (save-excursion
+     (goto-char (point-max))
+     (with-nroam-markers
+       (seq-do #'funcall nroam-sections)))
+   (nroam--hide-drawers)))
 
 (defun nroam--get-backlinks ()
   "Return a list of backlinks for the current buffer."
