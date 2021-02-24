@@ -192,10 +192,8 @@ Make the region inserted by BODY read-only, and marked with
        (with-nroam-markers
          (seq-do #'funcall nroam-sections))
        (when (nroam--sections-inserted-p)
-         (goto-char (+ p 1)) ; maybe to implicit. But loc. of new
-                             ; backlinks section
          (save-restriction
-           (org-narrow-to-subtree)
+           (narrow-to-region p (point-max))
            (org-set-startup-visibility)))))))
 
 (defun nroam--get-backlinks ()
