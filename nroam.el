@@ -37,9 +37,22 @@
 (require 'org-roam)
 (require 'org-roam-buffer)
 (require 'org-element)
+(require 'org-capture)
 (require 'seq)
 (require 'subr-x)
 (require 'bookmark)
+
+(defun nroam--handle-org-capture (&rest _)
+  "Setup the `org-capture' buffer.
+
+Nroam sections need to be pruned as they are in read-only,
+otherwise `org-capture' will fail to insert the capture
+template."
+  (when-let ((buf (org-capture-get :buffer)))
+    (with-current-buffer buf
+      (nroam--prune))))
+
+(advice-add 'org-capture-place-template :before #'nroam--handle-org-capture)
 
 (defcustom nroam-sections
  '(nroam-backlinks-section)
@@ -119,8 +132,8 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam-backlinks-section ()
   "Insert org-roam backlinks for the current buffer."
-  (when-let* ((backlinks (nroam--get-backlinks))
-              (groups (seq-reverse (nroam--group-backlinks backlinks))))
+  (let* ((backlinks (nroam--get-backlinks))
+         (groups (seq-reverse (nroam--group-backlinks backlinks))))
     (nroam--ensure-empty-line)
     (nroam--insert-backlinks-heading (seq-length backlinks))
     (seq-do #'nroam--insert-backlink-group groups)
