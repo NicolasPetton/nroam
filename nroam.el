@@ -209,7 +209,7 @@ Make the region inserted by BODY read-only, and marked with
 (defun nroam--insert-backlinks-heading (count)
   "Insert the heading for the backlinks section with a COUNT."
   (insert (if (= count 0)
-              "* No linked reference"
+              "* No linked reference\n"
             (format "* %s %s\n"
                     count
                     (nroam--pluralize count "linked reference")))))
