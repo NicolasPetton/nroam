@@ -119,8 +119,8 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam-backlinks-section ()
   "Insert org-roam backlinks for the current buffer."
-  (let* ((backlinks (nroam--get-backlinks))
-         (groups (seq-reverse (nroam--group-backlinks backlinks))))
+  (when-let* ((backlinks (nroam--get-backlinks))
+              (groups (seq-reverse (nroam--group-backlinks backlinks))))
     (nroam--ensure-empty-line)
     (nroam--insert-backlinks-heading (seq-length backlinks))
     (seq-do #'nroam--insert-backlink-group groups)
