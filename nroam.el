@@ -1,6 +1,6 @@
 ;;; nroam.el --- Org-roam backlinks within org-mode buffers  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2021  Nicolas Petton
+;; Copyright (C) 2021 Nicolas Petton
 
 ;; Author: Nicolas Petton <nicolas@petton.fr>
 ;; URL: https://github.com/NicolasPetton/nroam
