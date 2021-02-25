@@ -233,20 +233,20 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--insert-source-content (backlink)
   "Insert the source element where BACKLINK is defined."
-  (seq-let (from _ props) backlink
-    (when-let* ((backlink-point (plist-get props :point))
-                (elt (nroam--crawl-source from backlink-point))
+  (seq-let (file _ props) backlink
+    (when-let* ((point (plist-get props :point))
+                (elt (nroam--crawl-source file point))
                 (type (car elt))
                 (content (string-trim (cdr elt)))
                 (beg (point)))
       (progn
         (pcase type
           ('headline (progn
-                       (org-paste-subtree 3 (nroam--fix-links content from))
+                       (org-paste-subtree 3 (nroam--fix-links content file))
                        (goto-char (point-max))))
-          (_ (insert (nroam--fix-links content from))))
+          (_ (insert (nroam--fix-links content file))))
         (set-text-properties beg (point)
-                             `(nroam-link t file ,from point ,backlink-point))
+                             `(nroam-link t file ,file point ,point))
         (insert "\n")))))
 
 (defun nroam--crawl-source (file point)
