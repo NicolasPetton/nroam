@@ -289,9 +289,7 @@ Temporary fix until `org-roam' v2 is out."
 
 (defun nroam--pluralize (n thing)
   "Pluralize the string THING if N>1."
-  (format "%s%s"
-          thing
-          (if (> n 1) "s" "")))
+  (format "%s%s" thing (if (> n 1) "s" "")))
 
 (defun nroam--ensure-empty-line ()
   "Insert a newline character if the buffer does contain one before point."
