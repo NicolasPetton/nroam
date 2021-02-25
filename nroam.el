@@ -136,7 +136,7 @@ Make the region inserted by BODY read-only, and marked with
          (groups (seq-reverse (nroam--group-backlinks backlinks))))
     (nroam--ensure-empty-line)
     (nroam--insert-backlinks-heading (seq-length backlinks))
-    (seq-do #'nroam--insert-backlink-group groups)
+    (nroam--do-separated-by-newlines #'nroam--insert-backlink-group groups)
     (nroam--hide-drawers)))
 
 (defun nroam--org-roam-file-p ()
@@ -191,7 +191,7 @@ Make the region inserted by BODY read-only, and marked with
        (goto-char p)
        (nroam--ensure-empty-line)
        (with-nroam-markers
-         (seq-do #'funcall nroam-sections))
+         (nroam--do-separated-by-newlines #'funcall nroam-sections))
        (when (nroam--sections-inserted-p)
          (save-restriction
            (narrow-to-region p (point-max))
@@ -219,16 +219,12 @@ Make the region inserted by BODY read-only, and marked with
   "Insert all backlinks in GROUP."
   (let ((file (car group))
         (backlinks (cdr group)))
-    (insert (format "\n** %s\n"
+    (insert (format "** %s\n"
                     (org-roam-format-link
                      file
                      (org-roam-db--get-title file)
                      "file")))
-    (seq-do-indexed (lambda (backlink index)
-                      (nroam--insert-backlink backlink)
-                      (when (< index (1- (seq-length backlinks)))
-                        (insert "\n")))
-                    backlinks)))
+    (nroam--do-separated-by-newlines #'nroam--insert-backlink backlinks)))
 
 (defun nroam--insert-backlink (backlink)
   "Insert a link to the org-roam BACKLINK."
@@ -308,6 +304,16 @@ Temporary fix until `org-roam' v2 is out."
   (let ((inhibit-read-only t))
     (goto-char (point-max))
     (unless (eq ?\n (char-before (1- (point)))) (insert "\n"))))
+
+(defun nroam--do-separated-by-newlines (function sequence)
+  "Apply FUNCTION to each element of SEQUENCE.
+Insert a single newline between each call to FUNCTION."
+  (seq-do-indexed (lambda (item index)
+                    (unless (= index 0)
+                      (delete-blank-lines)
+                      (nroam--ensure-empty-line))
+                    (funcall function item))
+                  sequence))
 
 (provide 'nroam)
 ;;; nroam.el ends here
