@@ -189,7 +189,8 @@ Make the region inserted by BODY read-only, and marked with
     (with-buffer-modified-unmodified
      (save-excursion
        (goto-char p)
-       (nroam--ensure-empty-line)
+       (unless (bobp)
+         (nroam--ensure-empty-line))
        (with-nroam-markers
          (nroam--do-separated-by-newlines #'funcall nroam-sections))
        (when (nroam--sections-inserted-p)
