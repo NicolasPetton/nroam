@@ -294,9 +294,8 @@ Temporary fix until `org-roam' v2 is out."
           (if (> n 1) "s" "")))
 
 (defun nroam--ensure-empty-line ()
-  "Insert a newline character if the buffer does not end with a newline."
+  "Insert a newline character if the buffer does contain one before point."
   (let ((inhibit-read-only t))
-    (goto-char (point-max))
     (unless (eq ?\n (char-before (1- (point)))) (insert "\n"))))
 
 (defun nroam--do-separated-by-newlines (function sequence)
