@@ -185,17 +185,17 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--insert ()
   "Insert nroam sections in the current buffer."
-  (let ((p (point-max)))
+  (let ((point (point-max)))
     (with-buffer-modified-unmodified
      (save-excursion
-       (goto-char p)
+       (goto-char point)
        (unless (bobp)
          (nroam--ensure-empty-line))
        (with-nroam-markers
          (nroam--do-separated-by-newlines #'funcall nroam-sections))
        (when (nroam--sections-inserted-p)
          (save-restriction
-           (narrow-to-region p (point-max))
+           (narrow-to-region point (point-max))
            (org-set-startup-visibility)))))))
 
 (defun nroam--get-backlinks ()
