@@ -99,10 +99,15 @@ Make the region inserted by BODY read-only, and marked with
         (nroam--init-work-buffer)
         (add-hook 'before-save-hook #'nroam--prune nil t)
         (add-hook 'after-save-hook #'nroam--update-maybe nil t)
-        (nroam-update))
+        (nroam--maybe-insert-immediately))
     (remove-hook 'before-save-hook #'nroam--prune t)
     (remove-hook 'after-save-hook #'nroam--update-maybe t)
     (nroam--prune)))
+
+(defun nroam--maybe-insert-immediately ()
+  "Insert nroam sections iff the buffer file exists."
+  (when (file-exists-p buffer-file-name)
+    (nroam-update)))
 
 ;;;###autoload
 (defun nroam-ctrl-c-ctrl-c ()
