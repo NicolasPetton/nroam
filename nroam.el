@@ -185,18 +185,21 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--insert ()
   "Insert nroam sections in the current buffer."
-  (let ((point (point-max)))
-    (with-buffer-modified-unmodified
-     (save-excursion
-       (goto-char point)
-       (unless (bobp)
-         (nroam--ensure-empty-line))
-       (with-nroam-markers
-         (nroam--do-separated-by-newlines #'funcall nroam-sections))
-       (when (nroam--sections-inserted-p)
-         (save-restriction
-           (narrow-to-region point (point-max))
-           (org-set-startup-visibility)))))))
+  (with-buffer-modified-unmodified
+   (save-excursion
+     (goto-char (point-max))
+     (unless (bobp)
+       (nroam--ensure-empty-line))
+     (with-nroam-markers
+       (nroam--do-separated-by-newlines #'funcall nroam-sections))
+     (nroam--set-sections-visibility))))
+
+(defun nroam--set-sections-visibility ()
+  "Set nroam section visibility according to `org-set-startup-visibility'."
+  (when (nroam--sections-inserted-p)
+    (save-restriction
+      (narrow-to-region nroam-start-marker nroam-end-marker)
+      (org-set-startup-visibility))))
 
 (defun nroam--get-backlinks ()
   "Return a list of backlinks for the current buffer."
