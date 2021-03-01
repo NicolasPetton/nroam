@@ -42,6 +42,7 @@
 
 (require 'nroam-utils)
 (require 'nroam-backlinks)
+(require 'nroam-unlinked)
 
 (defcustom nroam-sections nil
  "List of functions to be called to insert sections in nroam buffers."
@@ -200,6 +201,7 @@ Make the region inserted by BODY read-only, and marked with
       (goto-char point))))
 
 (nroam-backlinks-register-section)
+(nroam-unlinked-register-section)
 
 (provide 'nroam)
 ;;; nroam.el ends here
