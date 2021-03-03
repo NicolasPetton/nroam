@@ -80,14 +80,25 @@
   (seq-let (file _ props) backlink
     (when-let* ((point (plist-get props :point))
                 (elt (nroam-backlinks--crawl-source file point))
-                (type (car elt))
-                (content (string-trim (cdr elt)))
+                (type (plist-get elt :type))
+                (content (string-trim (plist-get elt :string)))
                 (beg (point)))
-      (pcase type
-        ('headline (progn
-                     (org-paste-subtree 3 (nroam--fix-links content file))
-                     (goto-char (point-max))))
-        (_ (insert (nroam--fix-links content file))))
+      (let ((outline (plist-get elt :outline))
+            (full-outline (plist-get elt :full-outline)))
+        (pcase type
+          ('headline (progn
+                       (when outline
+                         (let ((str-outline (concat "* " (string-join outline " › "))))
+                           (org-paste-subtree 3 str-outline)
+                           (goto-char (point-max))))
+                       (org-paste-subtree (if outline 4 3) (nroam--fix-links content file))
+                       (goto-char (point-max))))
+          (_ (progn
+               (when full-outline
+                 (let ((str-outline (concat "* " (string-join full-outline " › "))))
+                   (org-paste-subtree 3 str-outline)
+                   (goto-char (point-max))))
+               (insert (nroam--fix-links content file))))))
       (set-text-properties beg (point)
                            `(nroam-link t file ,file point ,point))
       (insert "\n"))))
@@ -100,8 +111,10 @@
     (let ((elt (org-element-at-point)))
       (let ((begin (org-element-property :begin elt))
             (end (org-element-property :end elt))
-            (type (org-element-type elt)))
-        `(,type . ,(buffer-substring begin end))))))
+            (type (org-element-type elt))
+            (outline (org-get-outline-path))
+            (full-outline (org-get-outline-path 'with-self)))
+        `(:type ,type :string ,(buffer-substring begin end) :full-outline ,full-outline :outline ,outline)))))
 
 (defun nroam-backlinks--hide-drawers ()
   "Fold all drawers starting at POINT in the current buffer."
