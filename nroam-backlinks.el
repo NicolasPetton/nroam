@@ -108,13 +108,16 @@
   (with-current-buffer (nroam-backlinks--work-buffer)
     (insert-file-contents file nil nil nil 'replace)
     (goto-char point)
-    (let ((elt (org-element-at-point)))
-      (let ((begin (org-element-property :begin elt))
-            (end (org-element-property :end elt))
-            (type (org-element-type elt))
-            (outline (org-get-outline-path))
-            (full-outline (org-get-outline-path 'with-self)))
-        `(:type ,type :string ,(buffer-substring begin end) :full-outline ,full-outline :outline ,outline)))))
+    (let* ((elt (org-element-at-point))
+           (begin (org-element-property :begin elt))
+           (end (org-element-property :end elt))
+           (type (org-element-type elt))
+           (outline (org-get-outline-path))
+           (full-outline (and outline (org-get-outline-path 'with-self))))
+      `(:type ,type
+        :string ,(buffer-substring begin end)
+        :outline ,outline
+        :full-outline ,full-outline))))
 
 (defun nroam-backlinks--hide-drawers ()
   "Fold all drawers starting at POINT in the current buffer."
