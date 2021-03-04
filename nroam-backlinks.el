@@ -95,15 +95,15 @@
 (defun nroam-backlinks--insert-backlink-subtree (content outline)
   "Insert CONTENT as a level 4 headline with its subtree.
 When OUTLINE is non-nil, insert it as a heading."
-  (nroam-backlinks--insert-backlink-outline outline)
+  (nroam-backlinks--insert-backlink-breadcrumbs outline)
   (nroam-backlinks--insert-subtree content 4))
 
 (defun nroam-backlinks--insert-backlink-content (content outline)
   "Insert CONTENT with OUTLINE as a heading if non-nil."
-  (nroam-backlinks--insert-backlink-outline outline)
+  (nroam-backlinks--insert-backlink-breadcrumbs outline)
   (insert content))
 
-(defun nroam-backlinks--insert-backlink-outline (outline)
+(defun nroam-backlinks--insert-backlink-breadcrumbs (outline)
   "Insert OUTLINE if non-nil as a breadcrumbs heading."
   (when outline
     (let ((str-outline (concat "* " (string-join outline " › "))))
