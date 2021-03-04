@@ -81,27 +81,39 @@
     (when-let* ((point (plist-get props :point))
                 (elt (nroam-backlinks--crawl-source file point))
                 (type (plist-get elt :type))
-                (content (string-trim (plist-get elt :string)))
+                (content (nroam--fix-links (string-trim (plist-get elt :string)) file))
                 (beg (point)))
       (let ((outline (plist-get elt :outline))
             (full-outline (plist-get elt :full-outline)))
-        (pcase type
-          ('headline (progn
-                       (when outline
-                         (let ((str-outline (concat "* " (string-join outline " › "))))
-                           (org-paste-subtree 3 str-outline)
-                           (goto-char (point-max))))
-                       (org-paste-subtree (if outline 4 3) (nroam--fix-links content file))
-                       (goto-char (point-max))))
-          (_ (progn
-               (when full-outline
-                 (let ((str-outline (concat "* " (string-join full-outline " › "))))
-                   (org-paste-subtree 3 str-outline)
-                   (goto-char (point-max))))
-               (insert (nroam--fix-links content file))))))
+        (if (eq type 'headline)
+            (nroam-backlinks--insert-backlink-subtree content outline)
+          (nroam-backlinks--insert-backlink-content content full-outline)))
       (set-text-properties beg (point)
                            `(nroam-link t file ,file point ,point))
       (insert "\n"))))
+
+(defun nroam-backlinks--insert-backlink-subtree (content outline)
+  "Insert CONTENT as a level 4 headline with its subtree.
+When OUTLINE is non-nil, insert it as a heading."
+  (nroam-backlinks--insert-backlink-outline outline)
+  (nroam-backlinks--insert-subtree content 4))
+
+(defun nroam-backlinks--insert-backlink-content (content outline)
+  "Insert CONTENT with OUTLINE as a heading if non-nil."
+  (nroam-backlinks--insert-backlink-outline outline)
+  (insert content))
+
+(defun nroam-backlinks--insert-backlink-outline (outline)
+  "Insert OUTLINE if non-nil as a breadcrumbs heading."
+  (when outline
+    (let ((str-outline (concat "* " (string-join outline " › "))))
+      (nroam-backlinks--insert-subtree str-outline))))
+
+(defun nroam-backlinks--insert-subtree (subtree &optional level)
+  "Insert SUBTREE as a LEVEL headline.
+When nil, LEVEL defaults to 3."
+  (org-paste-subtree (or level 3) subtree)
+  (goto-char (point-max)))
 
 (defun nroam-backlinks--crawl-source (file point)
   "Return the source element in FILE at POINT."
