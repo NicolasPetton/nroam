@@ -93,10 +93,10 @@
       (insert "\n"))))
 
 (defun nroam-backlinks--insert-backlink-subtree (content outline)
-  "Insert CONTENT as a level 4 headline with its subtree.
+  "Insert CONTENT as a heading with its subtree.
 When OUTLINE is non-nil, insert it as a heading."
   (nroam-backlinks--insert-backlink-breadcrumbs outline)
-  (nroam-backlinks--insert-subtree content 4))
+  (nroam-backlinks--insert-subtree content (if outline 4 3)))
 
 (defun nroam-backlinks--insert-backlink-content (content outline)
   "Insert CONTENT with OUTLINE as a heading if non-nil."
