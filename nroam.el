@@ -5,7 +5,7 @@
 ;; Author: Nicolas Petton <nicolas@petton.fr>
 ;; URL: https://github.com/NicolasPetton/nroam
 ;; Keywords: outlines, convenience
-;; Version: 0.0.1
+;; Version: 0.9.0
 ;; Package-Requires: ((emacs "26.1") (org-roam "1.2.3"))
 
 ;; This file is NOT part of GNU Emacs.
