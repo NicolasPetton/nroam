@@ -1,6 +1,10 @@
 * nroam
 
-nroam is a supplementary package for [[https://github.com/org-roam/org-roam][org-roam]] that replaces the backlink side buffer of Org-roam.  Instead, it displays org-roam backlinks—as well as unlinked references—at the end of org-roam buffers.
+nroam is a supplementary package for [[https://github.com/org-roam/org-roam][org-roam]] that replaces the
+backlink side buffer of Org-roam.  Instead, it displays org-roam
+backlinks at the end of org-roam buffers. The user can also click a
+button to see unlinked occurrences of the buffer title (as defined by
+=org-roam-unlinked-references=).
 
 ** Screenshots
 
@@ -12,11 +16,21 @@ nroam is a supplementary package for [[https://github.com/org-roam/org-roam][org
 
 * Rationale
 
-One of the ideas behing nroam is to remove the friction and effort it takes to consult backlinks. I consider backlinks to be a very central piece of information about a note. Backlinks can even be the most important content of a note, for instance when using page links as tags.
+One of the ideas behind nroam is to remove the friction and effort it
+takes to consult backlinks. I consider backlinks to be a very central
+piece of information about a note. Backlinks can even be the most
+important content of a note, for instance when using page links as
+tags.
 
-It is easy to miss backlinks when they are not always visible with the main content of a note. The side buffer will not always be open, and even if it is, the information it contains is visually far away from the note you're looking at.
+It is easy to miss backlinks when they are not always visible with the
+main content of a note. The side buffer will not always be open, and
+even if it is, the information it contains is visually far away from
+the note you're looking at.
 
-By making them an integral part of the org buffer, backlinks also become more powerful. You could for instance make a sparse tree—see =org-sparse-tree= — to filter the contents of a note and its backlinks at the same time.
+By making them an integral part of the org buffer, backlinks also
+become more powerful. You could for instance make a sparse tree—see
+=org-sparse-tree= — to filter the contents of a note and its backlinks
+at the same time.
 
 * Setup & usage
 
@@ -27,8 +41,11 @@ To setup nroam for all =org-mode= buffer, evaluate the following:
 #+end_src
 
 The linked references section will be updated after each buffer save.
-It can also be manually updated by typing =C-c C-c= anywhere in the linked references section.
+It can also be manually updated by typing =C-c C-c= anywhere in the
+linked references section.
 
 * Warning
 
-This package is in its infancy. Be careful when using it as it modifies your =org-mode= buffers—it should not modify your files though. Backup your data often.
+This package is in its infancy. Be careful when using it as it
+modifies your =org-mode= buffers—it should not modify your files
+though. Backup your data often.
