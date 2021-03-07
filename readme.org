@@ -15,7 +15,7 @@ buffers.
 
 * Rationale
 
-One of the ideas behing nroam is to remove the friction and effort it
+One of the ideas behind nroam is to remove the friction and effort it
 takes to consult backlinks. I consider backlinks to be a very central
 piece of information about a note. Backlinks can even be the most
 important content of a note, for instance when using page links as
