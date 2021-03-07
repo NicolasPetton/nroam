@@ -95,7 +95,7 @@ Make the region inserted by BODY read-only, and marked with
 ;;;###autoload
 (define-minor-mode nroam-mode
   "Show nroam sections at the end of org-roam buffers."
-  :lighter "nroam"
+  :lighter " nroam"
   :keymap nroam-mode-map
   (if nroam-mode
       (progn
