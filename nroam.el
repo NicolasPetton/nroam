@@ -88,7 +88,7 @@ Make the region inserted by BODY read-only, and marked with
 
 ;;;###autoload
 (defun nroam-setup-maybe ()
-  "Setup nroam for the current buffer iff an org-roam buffer."
+  "Setup nroam for the current buffer iff an `org-roam' buffer."
   (when (nroam--org-roam-file-p)
     (nroam-mode)))
 
@@ -131,14 +131,14 @@ Make the region inserted by BODY read-only, and marked with
 
 ;;;###autoload
 (defun nroam-update ()
-  "Update org-roam sections for the current buffer."
+  "Update `org-roam' sections for the current buffer."
   (interactive)
   (nroam--setup-markers)
   (nroam--prune)
   (nroam--insert))
 
 (defun nroam--org-roam-file-p ()
-  "Return non-nil if the current buffer is an org-roam buffer."
+  "Return non-nil if the current buffer is an `org-roam' buffer."
   (org-roam--org-roam-file-p))
 
 (defun nroam--point-at-section-p ()
@@ -149,7 +149,7 @@ Make the region inserted by BODY read-only, and marked with
       (<= beg (point) end))))
 
 (defun nroam--update-maybe ()
-  "Update backlinks when in nroam-mode."
+  "Update backlinks when nroam is enabled."
   (when nroam-mode
     (nroam-update)))
 

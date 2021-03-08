@@ -37,7 +37,7 @@
   (nroam-register-section #'nroam-backlinks-section))
 
 (defun nroam-backlinks-section ()
-  "Insert org-roam backlinks for the current buffer."
+  "Insert `org-roam' backlinks for the current buffer."
   (let* ((backlinks (nroam-backlinks--get-backlinks))
          (groups (seq-reverse (nroam-backlinks--group backlinks))))
     (nroam-backlinks--insert-heading (seq-length backlinks))

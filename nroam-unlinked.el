@@ -36,7 +36,7 @@
   (nroam-register-section #'nroam-unlinked-section))
 
 (defun nroam-unlinked-section ()
-  "Insert org-roam unlinked references for the current buffer."
+  "Insert `org-roam' unlinked references for the current buffer."
   (nroam-unlinked--insert-heading)
   (if nroam-unlinked-show-references
       (nroam-unlinked--insert-references)
