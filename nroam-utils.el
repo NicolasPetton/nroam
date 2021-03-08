@@ -3,11 +3,6 @@
 ;; Copyright (C) 2021  Nicolas Petton
 
 ;; Author: Nicolas Petton <nico@petton.fr>
-;; URL: https://github.com/NicolasPetton/nroam
-;; Keywords: convenience
-;; Version: 0.9.0
-;; Package-Requires: ((emacs "26.1") (org-roam "1.2.3"))
-
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
