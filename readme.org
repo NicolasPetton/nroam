@@ -32,6 +32,21 @@ become more powerful. You could for instance make a sparse tree—see
 =org-sparse-tree= — to filter the contents of a note and its backlinks
 at the same time.
 
+* Installation
+
+nroam is not yet available in [[https://melpa.org][MELPA]]. Until it is, you can install the Elisp files by hand in your =.emacs.d= or if you use =straight.el= add the following to you init file.
+
+#+begin_src elisp
+(use-package nroam
+  :straight '(nroam :host github
+                         :branch "master"
+                         :repo "NicolasPetton/nroam")
+  :after org-roam
+  :config
+  (add-hook 'org-mode-hook #'nroam-setup-maybe))
+#+end_src
+
+
 * Setup & usage
 
 To setup nroam for all =org-mode= buffer, evaluate the following:
