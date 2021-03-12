@@ -56,7 +56,7 @@
 
 (defun nroam-backlinks--insert-heading (count)
   "Insert the heading for the backlinks section with a COUNT."
-  (insert (format "* %s %s\n"
+  (insert (format "* %s %s                          :noexport:\n"
                   (if (= count 0) "No" count)
                   (nroam--pluralize count "linked reference"))))
 
