@@ -30,7 +30,7 @@
   (format "%s%s" thing (if (> n 1) "s" "")))
 
 (defun nroam--ensure-empty-line ()
-  "Insert a newline character if the buffer does contain one before point."
+  "Insert a newline character if the buffer does not contain one before point."
   (let ((inhibit-read-only t))
     (unless (eq ?\n (char-before (1- (point)))) (insert "\n"))))
 
