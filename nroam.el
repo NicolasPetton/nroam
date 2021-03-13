@@ -78,6 +78,10 @@ Make the region inserted by BODY read-only, and marked with
      ,@body
      (put-text-property beg (1+ beg) 'front-sticky '(read-only))
      (put-text-property beg (point) 'read-only t)
+     ;; Add a non-read-only newline so that text can be inserted at the end of
+     ;; the buffer.
+     (let ((inhibit-read-only t))
+       (insert "\n"))
      (set-marker nroam-end-marker (point))))
 
 (defvar nroam-mode-map
