@@ -35,7 +35,8 @@
     (unless (eq ?\n (char-before (1- (point)))) (insert "\n"))))
 
 (defun nroam--insert-heading (level title &optional tags)
-  "Insert a section heading"
+  "Insert TITLE as a section heading with LEVEL stars.
+Add the string or list of strings as TAGS to the heading."
   (let ((pos (point))
         (stars (make-string level ?*)))
     (insert stars " " title "\n")
