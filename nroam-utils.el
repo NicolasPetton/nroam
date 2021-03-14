@@ -34,6 +34,17 @@
   (let ((inhibit-read-only t))
     (unless (eq ?\n (char-before (1- (point)))) (insert "\n"))))
 
+(defun nroam--insert-heading (level title &optional tags)
+  "Insert TITLE as a section heading with LEVEL stars.
+Add the string or list of strings as TAGS to the heading."
+  (let ((pos (point))
+        (stars (make-string level ?*)))
+    (insert stars " " title "\n")
+    (when tags
+      (save-excursion
+      (goto-char pos)
+      (org-set-tags tags)))))
+
 (defun nroam--do-separated-by-newlines (function sequence)
   "Apply FUNCTION to each element of SEQUENCE.
 Insert a single newline between each call to FUNCTION."

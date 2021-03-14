@@ -56,19 +56,19 @@
 
 (defun nroam-backlinks--insert-heading (count)
   "Insert the heading for the backlinks section with a COUNT."
-  (insert (format "* %s %s                          :noexport:\n"
-                  (if (= count 0) "No" count)
-                  (nroam--pluralize count "linked reference"))))
+  (let ((title (format "%s %s"
+                       (if (= count 0) "No" count)
+                       (nroam--pluralize count "linked reference"))))
+    (nroam--insert-heading 2 title)))
 
 (defun nroam-backlinks--insert-group (group)
   "Insert all backlinks in GROUP."
   (let ((file (car group))
-        (backlinks (cdr group)))
-    (insert (format "** %s\n"
-                    (org-roam-format-link
-                     file
-                     (org-roam-db--get-title file)
-                     "file")))
+        (backlinks (cdr group))
+        (title (org-roam-format-link file
+                                     (org-roam-db--get-title file)
+                                     "file")))
+    (nroam--insert-heading 3 title)
     (nroam--do-separated-by-newlines #'nroam-backlinks--insert-backlink backlinks)))
 
 (defun nroam-backlinks--insert-backlink (backlink)

@@ -44,7 +44,7 @@
 
 (defun nroam-unlinked--insert-heading ()
   "Insert the heading for unlinked references."
-  (insert "* Unlinked references                      :noexport:\n"))
+  (nroam--insert-heading 2 "Unlinked references"))
 
 (defun nroam-unlinked--insert-references ()
   "Insert unlinked references for the current buffer."

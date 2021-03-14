@@ -186,6 +186,7 @@ Make the region inserted by BODY read-only, and marked with
      (unless (bobp)
        (nroam--ensure-empty-line))
      (with-nroam-markers
+       (nroam--insert-heading 1 "Backlinks" "noexport")
        (nroam--do-separated-by-newlines #'funcall nroam-sections))
      (nroam--set-sections-visibility))))
 
