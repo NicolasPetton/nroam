@@ -22,6 +22,7 @@
 ;; This library provides a backlinks nroam section for org-roam buffers.
 
 ;;; Code:
+(require 'org)
 (require 'org-element)
 (require 'org-roam)
 (require 'seq)
