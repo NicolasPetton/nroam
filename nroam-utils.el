@@ -36,7 +36,7 @@
 
 (defun nroam--insert-heading (level title &optional tags)
   "Insert TITLE as a section heading with LEVEL stars.
-Add the string or list of strings as TAGS to the heading."
+When non-nil, add the string or list of strings as TAGS to the heading."
   (let ((pos (point))
         (stars (make-string level ?*)))
     (insert stars " " title "\n")
