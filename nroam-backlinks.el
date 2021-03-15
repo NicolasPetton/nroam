@@ -63,11 +63,11 @@
 
 (defun nroam-backlinks--insert-group (group)
   "Insert all backlinks in GROUP."
-  (let ((file (car group))
-        (backlinks (cdr group))
-        (title (org-roam-format-link file
-                                     (org-roam-db--get-title file)
-                                     "file")))
+  (let* ((file (car group))
+         (backlinks (cdr group))
+         (title (org-roam-format-link file
+                                      (org-roam-db--get-title file)
+                                      "file")))
     (nroam--insert-heading 3 title)
     (nroam--do-separated-by-newlines #'nroam-backlinks--insert-backlink backlinks)))
 
