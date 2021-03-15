@@ -93,7 +93,7 @@
   "Insert CONTENT as a heading with its subtree.
 When OUTLINE is non-nil, insert it as a heading."
   (nroam-backlinks--insert-backlink-breadcrumbs outline)
-  (nroam-backlinks--insert-subtree content (if outline 4 3)))
+  (nroam-backlinks--insert-subtree content (if outline 5 4)))
 
 (defun nroam-backlinks--insert-backlink-content (content outline)
   "Insert CONTENT with OUTLINE as a heading if non-nil."
@@ -108,8 +108,8 @@ When OUTLINE is non-nil, insert it as a heading."
 
 (defun nroam-backlinks--insert-subtree (subtree &optional level)
   "Insert SUBTREE as a LEVEL headline.
-When nil, LEVEL defaults to 3."
-  (org-paste-subtree (or level 3) subtree)
+LEVEL defaults to 4 when nil."
+  (org-paste-subtree (or level 4) subtree)
   (goto-char (point-max)))
 
 (defun nroam-backlinks--crawl-source (file point)
