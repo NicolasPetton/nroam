@@ -2,10 +2,11 @@
 # that is more recent than the one provided by Emacs 27.1. Because
 # makel will refuse to install org because it is built into Emacs, we
 # force a newer version by asking org-plus-contrib instead.
-ELPA_DEPENDENCIES=package-lint org-plus-contrib org-roam
+ELPA_DEPENDENCIES=package-lint org-plus-contrib org-roam buttercup f s
 
 ELPA_ARCHIVES=melpa org
 
+TEST_BUTTERCUP_OPTIONS=tests
 LINT_CHECKDOC_FILES=$(wildcard *.el)
 LINT_PACKAGE_LINT_FILES=nroam.el
 LINT_COMPILE_FILES=$(wildcard *.el)
