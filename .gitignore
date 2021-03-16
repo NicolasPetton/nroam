@@ -1,0 +1,4 @@
+*.elc
+*~
+nroam-autoloads.el
+/makel.mk
