@@ -1,6 +1,10 @@
-ELPA_DEPENDENCIES=package-lint
+# Dependencies to install. The project depends on a version of org
+# that is more recent than the one provided by Emacs 27.1. Because
+# makel will refuse to install org because it is built into Emacs, we
+# force a newer version by asking org-plus-contrib instead.
+ELPA_DEPENDENCIES=package-lint org-plus-contrib org-roam
 
-ELPA_ARCHIVES=melpa-stable gnu
+ELPA_ARCHIVES=melpa org
 
 LINT_CHECKDOC_FILES=$(wildcard *.el)
 LINT_PACKAGE_LINT_FILES=nroam.el
