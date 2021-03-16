@@ -23,4 +23,5 @@ jobs:
     - name: Test the project
       run: |
         make ci-dependencies
+        emacs --version
         make check
