@@ -56,18 +56,6 @@
 (defvar-local nroam-start-marker nil)
 (defvar-local nroam-end-marker nil)
 
-(defun nroam--handle-org-capture (&rest _)
-  "Setup the `org-capture' buffer.
-
-Nroam sections need to be pruned as they are in read-only,
-otherwise `org-capture' will fail to insert the capture
-template."
-  (when-let ((buf (org-capture-get :buffer)))
-    (with-current-buffer buf
-      (nroam--prune))))
-
-(advice-add 'org-capture-place-template :before #'nroam--handle-org-capture)
-
 (defmacro with-nroam-markers (&rest body)
   "Evaluate BODY.
 Make the region inserted by BODY read-only, and marked with

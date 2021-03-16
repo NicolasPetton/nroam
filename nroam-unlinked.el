@@ -62,8 +62,7 @@
   "Insert a button to show unlinked references."
   (let ((beg (point)))
     (insert "[Show unlinked references]")
-    (make-text-button beg (point) 'action #'nroam-unlinked--show-references)
-    (insert "\n")))
+    (make-text-button beg (point) 'action #'nroam-unlinked--show-references)))
 
 (defun nroam-unlinked--show-references (&rest _)
   "Search for and show unlinked references."
