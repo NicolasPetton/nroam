@@ -49,6 +49,13 @@
  :group 'nroam
  :type '(repeat function))
 
+(defvar nroam-sections-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-c") #'nroam-update)
+    (define-key map (kbd "RET") #'nroam-return)
+    map)
+  "Local keymap within nroam sections.")
+
 (defun nroam-register-section (function)
   "Add FUNCTION as a section in nroam."
   (add-to-list 'nroam-sections function t))
@@ -64,19 +71,15 @@ Make the region inserted by BODY read-only, and marked with
   `(let ((beg (point)))
      (set-marker nroam-start-marker (point))
      ,@body
-     (put-text-property beg (1+ beg) 'front-sticky '(read-only))
-     (put-text-property beg (point) 'read-only t)
-     ;; Add a non-read-only newline so that text can be inserted at the end of
-     ;; the buffer.
-     (let ((inhibit-read-only t))
+     (let* ((end (point))
+            (ov (make-overlay beg end)))
+       (overlay-put ov 'keymap nroam-sections-map)
+       (put-text-property beg (1+ beg) 'front-sticky '(read-only))
+       (put-text-property beg end 'read-only t)
+       ;; Add a non-read-only newline so that text can be inserted at the end of
+       ;; the buffer.
        (insert "\n"))
      (set-marker nroam-end-marker (point))))
-
-(defvar nroam-mode-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-c") #'nroam-ctrl-c-ctrl-c)
-    (define-key map (kbd "RET") #'nroam-return)
-    map))
 
 ;;;###autoload
 (defun nroam-setup-maybe ()
@@ -88,7 +91,6 @@ Make the region inserted by BODY read-only, and marked with
 (define-minor-mode nroam-mode
   "Show nroam sections at the end of org-roam buffers."
   :lighter " nroam"
-  :keymap nroam-mode-map
   (if nroam-mode
       (progn
         (add-hook 'before-save-hook #'nroam--prune nil t)
@@ -104,26 +106,16 @@ Make the region inserted by BODY read-only, and marked with
     (nroam-update)))
 
 ;;;###autoload
-(defun nroam-ctrl-c-ctrl-c ()
-  "Update the sections for the current buffer, or fallback to `org-ctrl-c-ctrl-c'."
-  (interactive)
-  (if (nroam--point-at-section-p)
-      (nroam-update)
-    (call-interactively (if org-capture-mode
-                            #'org-capture-finalize
-                          #'org-ctrl-c-ctrl-c))))
-
-;;;###autoload
 (defun nroam-return ()
-  "Open nroam link at point, or fallback to `org-return'."
+  "Open nroam link or push button at point."
   (interactive)
-  (if (nroam--point-at-section-p)
-      (nroam--follow-link)
-    (call-interactively #'org-return)))
+  (if (get-text-property (point) 'button)
+      (call-interactively #'push-button)
+    (nroam--follow-link)))
 
 ;;;###autoload
 (defun nroam-update ()
-  "Update `org-roam' sections for the current buffer."
+  "Update nroam sections for the current buffer."
   (interactive)
   (nroam--setup-markers)
   (nroam--prune)
@@ -132,13 +124,6 @@ Make the region inserted by BODY read-only, and marked with
 (defun nroam--org-roam-file-p ()
   "Return non-nil if the current buffer is an `org-roam' buffer."
   (org-roam--org-roam-file-p))
-
-(defun nroam--point-at-section-p ()
-  "Return non-hil if point if on the backlinks section."
-  (when (nroam--sections-inserted-p)
-    (when-let* ((beg (marker-position nroam-start-marker))
-                (end (marker-position nroam-end-marker)))
-      (<= beg (point) end))))
 
 (defun nroam--update-maybe ()
   "Update backlinks when nroam is enabled."
