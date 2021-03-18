@@ -4,7 +4,7 @@
 # force a newer version by asking org-plus-contrib instead.
 ELPA_DEPENDENCIES=package-lint org-plus-contrib org-roam buttercup f s
 
-ELPA_ARCHIVES=melpa org
+ELPA_ARCHIVES=melpa org gnu
 
 TEST_BUTTERCUP_OPTIONS=tests
 LINT_CHECKDOC_FILES=$(wildcard *.el)
