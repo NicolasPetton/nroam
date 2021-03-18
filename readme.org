@@ -1,4 +1,4 @@
-* nroam
+* nroam [[https://github.com/NicolasPetton/nroam/actions/workflows/test.yml/badge.svg]]
 
 nroam is a supplementary package for [[https://github.com/org-roam/org-roam][org-roam]] that replaces the
 backlink side buffer of Org-roam.  Instead, it displays org-roam
