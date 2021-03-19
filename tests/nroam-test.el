@@ -40,7 +40,7 @@ Execute BODY and cleanup the file and buffer after that."
 (nroam-test-with-temp-file-buffer (insert "foo"))
 
 (describe "nroam"
-  (describe "nroam-more"
+  (describe "nroam-mode"
     (it "creates nroam sections immediately"
       (nroam-test-with-temp-file-buffer
        (insert "#+title: my notes\n")
