@@ -142,6 +142,12 @@ Make the region inserted by BODY read-only, and marked with
   (and (markerp nroam-start-marker)
        (marker-position nroam-start-marker)))
 
+(defun nroam-goto ()
+  "Move point to the beginning of nroam sections if any."
+  (interactive)
+  (when (nroam--sections-inserted-p)
+    (setf (point) (marker-position nroam-start-marker))))
+
 (defun nroam--prune ()
   "Remove nroam sections from the current buffer."
   (let ((inhibit-read-only t))

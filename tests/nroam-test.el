@@ -50,7 +50,15 @@ Execute BODY and cleanup the file and buffer after that."
        (setf (point) (point-min))
        (let ((section-position (re-search-forward nroam-test-main-section-regexp nil t)))
          (expect section-position :not :to-be nil)
-         (expect section-position :to-be-greater-than 10))))))
+         (expect section-position :to-be-greater-than 10)))))
+  (describe "nroam-goto"
+    (it "moves point if nroam heading is present"
+      (nroam-test-with-temp-file-buffer
+       (insert "nroam is great\n")
+       (nroam-update)
+       (setf (point) (point-min))
+       (nroam-goto)
+       (expect (looking-at-p nroam-test-main-section-regexp) :to-be t)))))
 
 (provide 'nroam-test)
 ;;; nroam-test.el ends here
