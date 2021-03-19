@@ -39,6 +39,8 @@ Execute BODY and cleanup the file and buffer after that."
 
 (nroam-test-with-temp-file-buffer (insert "foo"))
 
+(defconst nroam-test-main-section-regexp "^* Backlinks")
+
 (describe "nroam"
   (describe "nroam-mode"
     (it "creates nroam sections immediately"
@@ -46,7 +48,7 @@ Execute BODY and cleanup the file and buffer after that."
        (insert "#+title: my notes\n")
        (nroam-mode)
        (setf (point) (point-min))
-       (let ((section-position (re-search-forward "^* Backlinks" nil t)))
+       (let ((section-position (re-search-forward nroam-test-main-section-regexp nil t)))
          (expect section-position :not :to-be nil)
          (expect section-position :to-be-greater-than 10))))))
 
