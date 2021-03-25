@@ -44,12 +44,10 @@
 (require 'nroam-backlinks)
 (require 'nroam-unlinked)
 
-(defcustom nroam-sections nil
- "List of functions to be called to insert sections in nroam buffers."
- :group 'nroam
- :type '(repeat function))
+(defvar nroam--sections nil
+ "List of functions to be called to insert sections in nroam buffers.")
 
-(defvar nroam-sections-map
+(defvar nroam--sections-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-c") #'nroam-update)
     (define-key map (kbd "RET") #'nroam-return)
@@ -58,7 +56,7 @@
 
 (defun nroam-register-section (function)
   "Add FUNCTION as a section in nroam."
-  (add-to-list 'nroam-sections function t))
+  (add-to-list 'nroam--sections function t))
 
 (defvar-local nroam-start-marker nil)
 (defvar-local nroam-end-marker nil)
@@ -73,7 +71,7 @@ Make the region inserted by BODY read-only, and marked with
      ,@body
      (let* ((end (point))
             (ov (make-overlay beg end)))
-       (overlay-put ov 'keymap nroam-sections-map)
+       (overlay-put ov 'keymap nroam--sections-map)
        (put-text-property beg (1+ beg) 'front-sticky '(read-only))
        (put-text-property beg end 'read-only t)
        ;; Add a non-read-only newline so that text can be inserted at the end of
@@ -166,7 +164,7 @@ Make the region inserted by BODY read-only, and marked with
        (nroam--ensure-empty-line))
      (with-nroam-markers
        (nroam--insert-heading 1 "Backlinks" "noexport")
-       (nroam--do-separated-by-newlines #'funcall nroam-sections))
+       (nroam--do-separated-by-newlines #'funcall nroam--sections))
      (nroam--set-sections-visibility))))
 
 (defun nroam--set-sections-visibility ()
