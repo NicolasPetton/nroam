@@ -1,5 +1,9 @@
 * nroam [[https://github.com/NicolasPetton/nroam/actions/workflows/test.yml/badge.svg]]
 
+*Update*: With the release of [[https://blog.jethro.dev/posts/org_roam_v2/][org-roam v2]] and its new revamped side-buffer, I do not feel the same need for nroam as I did with org-roam v1. The project is now archived, but if someone wants to port nroam to org-roam v2, I'd be willing to hand over maintenance of  the project.
+
+---
+
 nroam is a supplementary package for [[https://github.com/org-roam/org-roam][org-roam]] that replaces the
 backlink side buffer of Org-roam.  Instead, it displays org-roam
 backlinks at the end of org-roam buffers. The user can also click a
