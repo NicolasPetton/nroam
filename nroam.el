@@ -121,7 +121,10 @@ Make the region inserted by BODY read-only, and marked with
 
 (defun nroam--org-roam-file-p ()
   "Return non-nil if the current buffer is an `org-roam' buffer."
-  (org-roam--org-roam-file-p))
+  (cond
+    ((functionp 'org-roam--org-roam-file-p) (org-roam--org-roam-file-p))
+    ((functionp 'org-roam-file-p) (org-roam-file-p))
+    (t (error "Cannot find function to identify org-roam files (org-roam-file-p)"))))
 
 (defun nroam--update-maybe ()
   "Update backlinks when nroam is enabled."
